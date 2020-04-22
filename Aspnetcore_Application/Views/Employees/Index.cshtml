@@ -1,0 +1,97 @@
+﻿@model IEnumerable<Aspnetcore_Application.Models.Employee>
+
+@{
+	ViewData["Title"] = "Index";
+	Layout =  "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Employee Lists</h2>
+
+<p>
+	<a asp-action="Create">Create New</a>
+</p>
+
+<div class="container">
+	<br />
+	<div style="width:90%; margin:0 auto;">
+		<table id="example" class="table table-striped table-bordered dt-responsive nowrap" width="100%" cellspacing="0">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Name</th>
+					<th>Designation</th>
+					<th>Location</th>
+					<th style="width:20px;"></th>
+					<th style="width:20px;"></th>
+					<th style="width:20px;"></th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</div>
+</div>
+
+ <script>
+
+	$(document).ready(function () {
+		//Call EmpDetails jsonResult Method
+		$.getJSON("/Employees/LoadData",
+			function (json) {
+				var tr;
+				//Append each row to html table
+				for (var i = 0; i < json.length; i++) {
+					tr = $('<tr/>');
+					tr.append("<td>" + json[i].id + "</td>");
+					tr.append("<td>" + json[i].name + "</td>");
+					tr.append("<td>" + json[i].designation + "</td>");
+					tr.append("<td>" + json[i].location + "</td>");
+					tr.append("<td><a class=btn btn - info href=/Employees/Details/" + json[i].id + "><span class='fa fa-eye'></span></a></td>");
+					tr.append("<td><a class=btn btn - info href=/Employees/Edit/" + json[i].id + "><span class='fa fa-pencil-square-o'></span></a></td>");
+					tr.append("<td><a class=btn btn-danger onclick=DeleteData('" + json[i].id + "');><span class='fa fa-trash'></span></a></td>");				$('table').append(tr);
+				}
+
+				$('#example').DataTable({
+					"columnDefs": [
+						{ "orderable": false, "targets": 4 },
+						{ "orderable": false, "targets": 5 },
+						{ "orderable": false, "targets": 6 }
+					]
+				});
+
+			});
+	});
+
+
+    function DeleteData(CustomerID)
+        {
+            if (confirm("Are you sure you want to delete ...?"))
+            {
+                Delete(CustomerID);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+
+        function Delete(CustomerID)
+    {
+        var url = '@Url.Content("~/")' + "Employees/Delete";
+
+            $.post(url, { ID: CustomerID }, function (data)
+                {
+                    if (data)
+                    {
+                        oTable = $('#example').DataTable();
+                        oTable.draw();
+                    }
+                    else
+                    {
+                        alert("Something Went Wrong!");
+                    }
+                });
+    }
+
+ </script>
+

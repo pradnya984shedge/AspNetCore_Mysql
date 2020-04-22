@@ -15,12 +15,12 @@ namespace Aspnetcore_Application.Areas.Identity
         public void Configure(IWebHostBuilder builder)
         {
             builder.ConfigureServices((context, services) => {
-                services.AddDbContext<Aspnetcore_ApplicationContext>(options =>
-                    options.UseSqlServer(
+                services.AddDbContext<ApplicationDbContext>(options =>
+                    options.UseMySql(
                         context.Configuration.GetConnectionString("Aspnetcore_ApplicationContextConnection")));
 
                 services.AddDefaultIdentity<IdentityUser>()
-                    .AddEntityFrameworkStores<Aspnetcore_ApplicationContext>();
+                    .AddEntityFrameworkStores<ApplicationDbContext>();
             });
         }
     }

@@ -8,9 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Aspnetcore_Application.Models
 {
-    public class Aspnetcore_ApplicationContext : IdentityDbContext<IdentityUser>
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser>
     {
-        public Aspnetcore_ApplicationContext(DbContextOptions<Aspnetcore_ApplicationContext> options)
+        public ApplicationDbContext (DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
@@ -22,5 +22,7 @@ namespace Aspnetcore_Application.Models
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
         }
+
+        public virtual DbSet<Employee> Employee { get; set; }
     }
 }
