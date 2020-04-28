@@ -37,32 +37,8 @@
 
 	$(document).ready(function () {
 		//Call EmpDetails jsonResult Method
+		LoadData();
 		
-		$.getJSON("/Employees/LoadData",
-			function (json) {
-				var tr;
-				//Append each row to html table
-				for (var i = 0; i < json.length; i++) {
-					tr = $('<tr/>');
-					tr.append("<td>" + json[i].id + "</td>");
-					tr.append("<td>" + json[i].name + "</td>");
-					tr.append("<td>" + json[i].designation + "</td>");
-					tr.append("<td>" + json[i].location + "</td>");
-					tr.append("<td><a class=btn btn - info href=/Employees/Details/" + json[i].id + "><span class='fa fa-eye'></span></a></td>");
-					tr.append("<td><a class=btn btn - info href=/Employees/Edit/" + json[i].id + "><span class='fa fa-pencil-square-o'></span></a></td>");
-					tr.append("<td><a class=btn btn-danger onclick=DeleteData('" + json[i].id + "');><span class='fa fa-trash'></span></a></td>");
-					$('table').append(tr);
-				}
-
-				$('#example').DataTable({
-					"columnDefs": [
-						{ "orderable": false, "targets": 4 },
-						{ "orderable": false, "targets": 5 },
-						{ "orderable": false, "targets": 6 }
-					]
-				});
-
-			});
 	 });
 
 	 function LoadData() {
@@ -88,7 +64,11 @@
 				 }
 				 else {
 					 table = $('#example').DataTable({
-						 paging: false
+						 "columnDefs": [
+							 { "orderable": false, "targets": 4 },
+							 { "orderable": false, "targets": 5 },
+							 { "orderable": false, "targets": 6 }
+						 ]
 					 });
 				 }
 
