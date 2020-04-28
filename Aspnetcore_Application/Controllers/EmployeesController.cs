@@ -124,34 +124,52 @@ namespace Aspnetcore_Application.Controllers
             return View(employee);
         }
 
-        // GET: Employees/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        
+
+        [HttpPost]
+        public IActionResult Delete(int? id)
+        {
+            try
+            {
+                if (id == null)
+                {
+                    return RedirectToAction("Index", "Employees");
+                }
+
+                int result = 0;
+                var employee =  _context.Employee.Find(id);
+                _context.Employee.Remove(employee);
+                result = _context.SaveChanges();
+                if (result > 0)
+                {
+                   return Json(data: true);
+                }
+                else
+                {
+                   return Json(data: false);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        // GET: Employee/Delete/5
+        public async Task<IActionResult> Delete1(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var employee = await _context.Employee
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
-            return View(employee);
-        }
-
-        // POST: Employees/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
             var employee = await _context.Employee.FindAsync(id);
             _context.Employee.Remove(employee);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
 
         private bool EmployeeExists(int id)
         {

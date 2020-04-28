@@ -2,13 +2,15 @@
 
 @{
 	ViewData["Title"] = "Index";
-	Layout =  "~/Views/Shared/_Layout.cshtml";
+	Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+
 
 <h2>Employee Lists</h2>
 
 <p>
-	<a asp-action="Create">Create New</a>
+	<a class="btn btn-primary" asp-action="Create">Create New</a>
 </p>
 
 <div class="container">
@@ -31,10 +33,11 @@
 	</div>
 </div>
 
- <script>
+<script>
 
 	$(document).ready(function () {
 		//Call EmpDetails jsonResult Method
+		
 		$.getJSON("/Employees/LoadData",
 			function (json) {
 				var tr;
@@ -47,7 +50,8 @@
 					tr.append("<td>" + json[i].location + "</td>");
 					tr.append("<td><a class=btn btn - info href=/Employees/Details/" + json[i].id + "><span class='fa fa-eye'></span></a></td>");
 					tr.append("<td><a class=btn btn - info href=/Employees/Edit/" + json[i].id + "><span class='fa fa-pencil-square-o'></span></a></td>");
-					tr.append("<td><a class=btn btn-danger onclick=DeleteData('" + json[i].id + "');><span class='fa fa-trash'></span></a></td>");				$('table').append(tr);
+					tr.append("<td><a class=btn btn-danger onclick=DeleteData('" + json[i].id + "');><span class='fa fa-trash'></span></a></td>");
+					$('table').append(tr);
 				}
 
 				$('#example').DataTable({
@@ -59,19 +63,56 @@
 				});
 
 			});
-	});
+	 });
+
+	 function LoadData() {
+		 $.getJSON("/Employees/LoadData",
+			 function (json) {
+				 var tr;
+				$('#example tbody tr').empty();
+				 //Append each row to html table
+				 for (var i = 0; i < json.length; i++) {
+					 tr = $('<tr/>');
+					 tr.append("<td>" + json[i].id + "</td>");
+					 tr.append("<td>" + json[i].name + "</td>");
+					 tr.append("<td>" + json[i].designation + "</td>");
+					 tr.append("<td>" + json[i].location + "</td>");
+					 tr.append("<td><a class=btn btn - info href=/Employees/Details/" + json[i].id + "><span class='fa fa-eye'></span></a></td>");
+					 tr.append("<td><a class=btn btn - info href=/Employees/Edit/" + json[i].id + "><span class='fa fa-pencil-square-o'></span></a></td>");
+					 tr.append("<td><a class=btn btn-danger onclick=DeleteData('" + json[i].id + "');><span class='fa fa-trash'></span></a></td>");
+					 $('table').append(tr);
+				 }
+
+				 if ($.fn.dataTable.isDataTable('#example')) {
+					 table = $('#example').DataTable();
+				 }
+				 else {
+					 table = $('#example').DataTable({
+						 paging: false
+					 });
+				 }
+
+			 });
+	 }
 
 
     function DeleteData(CustomerID)
-        {
-            if (confirm("Are you sure you want to delete ...?"))
-            {
-                Delete(CustomerID);
-            }
-            else
-            {
-                return false;
-            }
+	{
+		swal({
+			title: "Delete Warning!",
+			text: "Are you sure you want to delete ...?",
+			icon: "warning",
+			buttons: true,
+			dangerMode: true,
+		})
+			.then((willDelete) => {
+				if (willDelete) {
+					Delete(CustomerID);
+				} else {
+					return false;
+				}
+			});
+
         }
 
 
@@ -82,9 +123,9 @@
             $.post(url, { ID: CustomerID }, function (data)
                 {
                     if (data)
-                    {
-                        oTable = $('#example').DataTable();
-                        oTable.draw();
+					{
+						LoadData();
+						window.location.reload();
                     }
                     else
                     {
@@ -93,5 +134,5 @@
                 });
     }
 
- </script>
+</script>
 
