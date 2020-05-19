@@ -25,4 +25,8 @@
     <Folder Include="Areas\Identity\Services\" />
   </ItemGroup>
 
+  <PropertyGroup>
+    <EnvironmentName>Development</EnvironmentName>
+  </PropertyGroup>
+
 </Project>

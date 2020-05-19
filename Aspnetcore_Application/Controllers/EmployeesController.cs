@@ -12,7 +12,7 @@ namespace Aspnetcore_Application.Controllers
     public class EmployeesController : Controller
     {
         private readonly ApplicationDbContext _context;
-
+        public static List<Employee> addresses = new List<Employee>();
         public EmployeesController(ApplicationDbContext context)
         {
             _context = context;
@@ -66,6 +66,8 @@ namespace Aspnetcore_Application.Controllers
         {
             if (ModelState.IsValid)
             {
+                addresses.Add(employee);
+
                 _context.Add(employee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
